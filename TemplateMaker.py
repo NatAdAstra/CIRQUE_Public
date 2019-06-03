@@ -127,15 +127,15 @@ if __name__ == '__main__':
 	t00 = time.time()
 	### SET UP BASIC PARAMTERS - USER INPUT ###
 	indlist = [1] #sersic index
-	dispxlist = [-0.5, -0.25,  0, 0.25 ]
-	dispylist = [-0.5, -0.25,  0,  0.25] #sub-pixel displacement values of galaxy center
-	e= [0, 0.2, 0.4, 0.6, 0.8] #ellipticity
-	ang = [0, (np.pi * 1./5.),  (np.pi * 1./5.), (np.pi * 2./5.), (np.pi * 3./5.), (np.pi * 4./5.)] #rotation angle from observer perspective
-	GalSize = np.linspace(800, 12000, 5)#pc half light size
-	Cores = 2 #number of parallel cores to use.
+	dispxlist = [ 0]
+	dispylist = [ 0] #sub-pixel displacement values of galaxy center (pixel units -0.5 <= x < +0.5)
+	e= [0, 0.2] #ellipticity, 0-1
+	ang = [0, (np.pi * 2./5.), (np.pi * 4./5.)] #rotation angle from observer perspective, 0-pi
+	GalSize = np.linspace(800, 12000, 3)#pc half light size
+	Cores = 3 #number of parallel cores to use.
 	Z=4 #Redshift for converting pc to angular size on sky
-	res=0.15 #resolution in arcsec
-	name='series1'#reference name for other scripts to call upon to open these templates.
+	res=0.15 #resolution in arcsec/pix
+	name='Example1'#reference name for other scripts to call upon to open these templates.
 	stampsize=30 #size of side of square stamp generated in pixels. 30x30 ~ 3mins per galaxy
 	###
 
