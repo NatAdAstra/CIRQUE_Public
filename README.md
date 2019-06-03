@@ -2,9 +2,11 @@
 
 ## Completeness Information for high Redshift QUEsts
 
-Currently in closed development, CIRQUE will be a python toolset to allow for the calculation of completeness corrections in astrophysical galaxy surveys. A public version should be available in late 2018.
+Currently in development, CIRQUE will be a python toolset to allow for the calculation of completeness corrections in astrophysical galaxy surveys.
 
 CIRQUE has the same foundations as GLACiAR ( https://github.com/danielacarrasco/GLACiAR , https://arxiv.org/pdf/1805.08985.pdf ). However it takes a slightly different approach to some of the optimisations and assumptions that get made.
+
+CIRQUE is built to run in python3.
 
 ### CIRQUE when complete will do the following:
 
