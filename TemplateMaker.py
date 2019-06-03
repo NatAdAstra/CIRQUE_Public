@@ -21,13 +21,6 @@ from scipy import integrate
 import tqdm
 
 
-#os.system("taskset -p 0xff %d" % os.getpid())
-# Define a series of functions to perfrom modelling of PSF
-
-# In[2]:
-
-
-# Define a series of functions used to help generate non-centered galaxies
 
 # In[3]:
 
@@ -110,13 +103,9 @@ def Templates(i):
 	Re= comb[i][5] * u.pc #size of galaxy half light
 	Re= Re.to(u.Mpc)
 	ReAng = ((Re* (1+Z)**2) / cosmo.luminosity_distance(Z)) * 57.2958 * 3600#size of galaxy in arcsec (converting from rad) via angular distance
-	#print(cosmo.luminosity_distance(Z))
 	galhalflight = ReAng/res
-	#print("arcsec size =", ReAng)
-	#print("pixel rad =", galhalflight)
 	headers = '%s' % comb[i]
 	stamps = makeSersic(ind, b, galhalflight, ell, a, stampsize, -dy, -dx)
-	#CountConv = CountList[i]/stamps[1]
 	Galaxy = stamps 
 	np.savetxt('GalaxyTemplates/%s_%s.txt' % (name, i+1), Galaxy, header=headers)
 	#tot+=1
@@ -136,13 +125,19 @@ MAIN
 """
 if __name__ == '__main__':
 	t00 = time.time()
-	### SET UP BASIC PARAMTERS AND PRIORS
+	### SET UP BASIC PARAMTERS - USER INPUT ###
 	indlist = [1] #sersic index
 	dispxlist = [-0.5, -0.25,  0, 0.25 ]
 	dispylist = [-0.5, -0.25,  0,  0.25] #sub-pixel displacement values of galaxy center
 	e= [0, 0.2, 0.4, 0.6, 0.8] #ellipticity
 	ang = [0, (np.pi * 1./5.),  (np.pi * 1./5.), (np.pi * 2./5.), (np.pi * 3./5.), (np.pi * 4./5.)] #rotation angle from observer perspective
 	GalSize = np.linspace(800, 12000, 5)#pc half light size
+	Cores = 2 #number of parallel cores to use.
+	Z=4 #Redshift for converting pc to angular size on sky
+	res=0.15 #resolution in arcsec
+	name='series1'#reference name for other scripts to call upon to open these templates.
+	stampsize=30 #size of side of square stamp generated in pixels. 30x30 ~ 3mins per galaxy
+	###
 
 	Parameters = [indlist, dispxlist, dispylist, e, ang, GalSize]
 	comb = [[]]
@@ -155,17 +150,9 @@ if __name__ == '__main__':
 
 	print(len(comb))
 	total=len(comb) 
-	name = 'series1' #reference name for other scripts to call upon to open these templates.
 
 	np.savetxt('GalaxyTemplates/%s_params.txt' % name, comb)
-	stampsize=30 #size of side of square stamp generated in pixels.
 
-
-	Z = 4 #Redshift for these galaxies (Used for galaxy radii, recommend use center of range you want to consider as size can be rescaled later)
-
-	res = 0.15 # resolution of image arcsec/pixel
-
-
-	with Pool(processes=2) as pool: #number of cores
+	with Pool(processes=Cores) as pool: #number of cores
 		list(tqdm.tqdm(pool.imap(Templates, range(0,total))))
 
